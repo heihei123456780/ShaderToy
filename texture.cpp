@@ -140,26 +140,21 @@ void Texture::release()
     glBindTexture(mTarget, 0);
 }
 
-bool Texture::savePixelsToFile(const char *filepath, GLubyte *pixels, GLint w, GLint h)
+bool Texture::savePixelsToFile(const char *filepath, GLubyte *pixels, GLint w, GLint h, int depth)
 {
-    int depth = 4;
-    GLubyte *result = new GLubyte[w * h * depth];
-
-    memcpy(result, pixels, w * h * depth);
+    stbi_uc temp;
 
     for (int row = 0; row < (h >> 1); row++) {
         for (int col = 0; col < w; col++) {
             for (int z = 0; z < depth; z++) {
                 int idx1 = (row * w + col) * depth + z;
                 int idx2 = ((h - row - 1) * w + col) * depth + z;
-                result[idx1] = result[idx2];
+                temp = pixels[idx1];
+                pixels[idx1] = pixels[idx2];
+                pixels[idx2] = temp;
             }
         }
     }
 
-    if (stbi_write_png(filepath, w, h, 4, result, w * 4) == 0)
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Can't create file: %s\n", filepath);
-
-    delete[] result;
-    return true;
+    return stbi_write_png(filepath, w, h, depth, pixels, w * depth);
 }

@@ -1,20 +1,21 @@
 #include "vector3.h"
 #include "vector4.h"
 
-#include "termios.h"
-
 #include "shaders.h"
 #include "texture.h"
 #include "framerate.h"
+#include "rectangle.h"
 #include "shadertoy.h"
 #include "shaderinput.h"
 #include "bufferobject.h"
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
 
+#include <GLFW/glfw3.h>
 #include <time.h>
 #include <sys/time.h>
-#include <iostream>
+
+#define NUMBER(n) n < 10 ? 0 : int(n / 10)
 
 GLfloat vertices[] = {
    -1.0f,  1.0f,  0.0f,  1.0f,  0.0f,
@@ -35,7 +36,6 @@ ShaderToy::ShaderToy()
       mProgram(nullptr)
 
 {
-
 }
 
 ShaderToy::~ShaderToy()
@@ -85,27 +85,49 @@ void ShaderToy::addUserFragmentMainCode(const char *fragmentMain)
 
 }
 
+bool ShaderToy::screenshot()
+{
+    int w = width();
+    int h = height();
+
+    GLubyte *pixels = new GLubyte[w * h * 4];
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    time_t t = time(nullptr);
+    struct tm *dt = localtime(&t);
+
+    const char *homepath = getenv("HOME");
+    if (homepath == nullptr)
+    {
+        delete[] pixels;
+        return false;
+    }
+
+    size_t len = strlen(homepath);
+
+    char filename[len + 20];
+    sprintf(filename, "%s/%d%d%d%d%d%d%d%d%d%d%d.png", homepath, dt->tm_year + 1900, NUMBER(dt->tm_mon + 1),
+            (dt->tm_mon + 1) % 10, NUMBER(dt->tm_mday), dt->tm_mday % 10, NUMBER(dt->tm_hour),
+            dt->tm_hour % 10, NUMBER(dt->tm_min), dt->tm_min % 10, NUMBER(dt->tm_sec),
+            dt->tm_sec % 10);
+
+    if (Texture::savePixelsToFile(filename, pixels, w, h, 4) == false)
+    {
+        delete[] pixels;
+        return false;
+    }
+
+    return true;
+}
+
 void ShaderToy::initilizeUniformValue()
 {
-    mInput.iResolutionPosition = mProgram->uniformLocation("iResolution");
-    mInput.iTimePosition = mProgram->uniformLocation("iTime");
-    mInput.iGlobalTimePosition = mProgram->uniformLocation("iGlobalTime");
-    mInput.iTimePosition = mProgram->uniformLocation("iTime");
-    mInput.iChannelTimePosition = mProgram->uniformLocation("iChannelTime");
-    mInput.iMousePosition = mProgram->uniformLocation("iMouse");
-    mInput.iDatePosition = mProgram->uniformLocation("iDate");
-    mInput.iSampleRatePosition = mProgram->uniformLocation("iSampleRate");
-    mInput.iChannelResolutionPosition = mProgram->uniformLocation("iChannelResolution");
-    mInput.iFramePosition = mProgram->uniformLocation("iFrame");
-    mInput.iTimeDeltaPosition = mProgram->uniformLocation("iTimeDelta");
-    mInput.iFrameRatePosition = mProgram->uniformLocation("iFrameRate");
-
-    mInput.iResolution = Vector3((float)width(), (float)height(), 1.0f);
-    mInput.iTime = 0.0f;
-    mInput.iGlobalTime = 0.0f;
-    mInput.iMouse = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-    mInput.iDate = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-    mInput.iSampleRate = 44100 * 1.0f;
+    mInput.iResolution  = Vector3(width() * 1.0f, height() * 1.0f, 1.0f);
+    mInput.iTime        = 0.0f;
+    mInput.iGlobalTime  = 0.0f;
+    mInput.iMouse       = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+    mInput.iDate        = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+    mInput.iSampleRate  = 44100 * 1.0f;
 
     auto size = mTextures.size();
 
@@ -120,28 +142,26 @@ void ShaderToy::initilizeUniformValue()
         }
     }
 
-    mInput.iFrame = 0;
-    mInput.iTimeDelta = 0.0f;
-    mInput.iFrameRate = 0.0f;
-
-
+    mInput.iFrame       = 0;
+    mInput.iTimeDelta   = 0.0f;
+    mInput.iFrameRate   = 0.0f;
 }
 
 void ShaderToy::bindUniform()
 {
     if (mProgram != nullptr)
     {
-        mProgram->setUniformValue(mInput.iResolutionPosition, mInput.iResolution);
-        mProgram->setUniformValue(mInput.iTimePosition, mInput.iTime);
-        mProgram->setUniformValue(mInput.iGlobalTimePosition, mInput.iGlobalTime);
-        mProgram->setUniformValue(mInput.iMousePosition, mInput.iMouse);
-        mProgram->setUniformValue(mInput.iDatePosition, mInput.iDatePosition);
-        mProgram->setUniformValue(mInput.iSampleRatePosition, mInput.iSampleRate);
-        mProgram->setUniformValueArray(mInput.iChannelResolutionPosition, mInput.iChannelResolution, 4);
-        mProgram->setUniformValueArray(mInput.iChannelTimePosition, mInput.iChannelTime, 4, 1);
-        mProgram->setUniformValue(mInput.iTimeDeltaPosition, mInput.iTimeDelta);
-        mProgram->setUniformValue(mInput.iFramePosition, mInput.iFrame);
-        mProgram->setUniformValue(mInput.iFrameRatePosition, mInput.iFrameRate);
+        mProgram->setUniformValue("iResolution", mInput.iResolution);
+        mProgram->setUniformValue("iTime", mInput.iTime);
+        mProgram->setUniformValue("iGlobalTime", mInput.iGlobalTime);
+        mProgram->setUniformValue("iMouse", mInput.iMouse);
+        mProgram->setUniformValue("iDate", mInput.iDate);
+        mProgram->setUniformValue("iSampleRate", mInput.iSampleRate);
+        mProgram->setUniformValueArray("iChannelResolution", mInput.iChannelResolution, 4);
+        mProgram->setUniformValueArray("iChannelTime", mInput.iChannelTime, 4, 1);
+        mProgram->setUniformValue("iTimeDelta", mInput.iTimeDelta);
+        mProgram->setUniformValue("iFrame", mInput.iFrame);
+        mProgram->setUniformValue("iFrameRate", mInput.iFrameRate);
 
         mProgram->setUniformValue("iChannel0", 0);
         mProgram->setUniformValue("iChannel1", 1);
@@ -198,8 +218,8 @@ void ShaderToy::resizeGL(int w, int h)
 {
     glViewport(0, 0, GLsizei(w), GLsizei(h));
 
-    mInput.iResolution.setX((float)w / 100.0f);
-    mInput.iResolution.setY((float)h / 100.0f);
+    mInput.iResolution.setX(w * 1.0f);
+    mInput.iResolution.setY(h * 1.0f);
 }
 
 void ShaderToy::renderGL()
@@ -211,7 +231,7 @@ void ShaderToy::renderGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mProgram->bind();
-    mInput.iTime = mFPS.globalTime() * 1.0f;
+    mInput.iTime = mFPS.globalTime() / 1000.0f;
     mInput.iGlobalTime = mInput.iTime;
 
     mInput.iDate.setX(date->tm_year + 1900.0f);
@@ -235,15 +255,34 @@ void ShaderToy::renderGL()
 
 void ShaderToy::keydownEvent(SDL_KeyboardEvent *event)
 {
+    if (event->keysym.sym == SDLK_x)
+    {
+        if (screenshot() == false)
+        {
+            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Save screenshot failed\n");
+        }
+    }
 }
 
 void ShaderToy::mouseButtonEvent(SDL_MouseButtonEvent *event)
 {
-
+    if (event->type == SDL_MOUSEBUTTONUP)
+    {
+        mInput.iMouse.setX(-Math::abs(mInput.iMouse.x()));
+        mInput.iMouse.setY(-Math::abs(mInput.iMouse.y()));
+    } else if (event->type == SDL_MOUSEBUTTONDOWN)
+    {
+        const Rectangle *_rect = rect();
+        mInput.iMouse.setX(Math::floor(event->x - _rect->left()));
+        mInput.iMouse.setY(Math::floor(height() - (event->y - _rect->top())));
+        mInput.iMouse.setZ(mInput.iMouse.x());
+        mInput.iMouse.setW(mInput.iMouse.y());
+    }
 }
 
 void ShaderToy::mouseMotionEvent(SDL_MouseMotionEvent *event)
 {
-    mInput.iMouse.setX(float(event->x) / width());
-    mInput.iMouse.setY(float(event->y) / height());
+    const Rectangle *_rect = rect();
+    mInput.iMouse.setZ(Math::floor(event->xrel - _rect->left()));
+    mInput.iMouse.setW(Math::floor(height() - (event->yrel - _rect->top())));
 }

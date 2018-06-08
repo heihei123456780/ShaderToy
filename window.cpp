@@ -1,7 +1,10 @@
 #include "window.h"
+#include "rectangle.h"
 
 Window::Window()
-    : mWindow(nullptr)
+    : mWindow(nullptr),
+      mContext(nullptr),
+      mRect(nullptr)
 {
     createWindow();
 }
@@ -13,48 +16,22 @@ Window::~Window()
 
 int Window::posX() const
 {
-    if (mWindow)
-    {
-        int x = 0, y = 0;
-        SDL_GetWindowPosition(mWindow, &x, &y);
-        return x;
-    }
-
-    return SDL_WINDOWPOS_CENTERED;
+    return mWindow != nullptr ? mRect->x() : SDL_WINDOWPOS_CENTERED;
 }
 
 int Window::posY() const
 {
-    if (mWindow)
-    {
-        int x = 0, y = 0;
-        SDL_GetWindowPosition(mWindow, &x, &y);
-        return y;
-    }
-
-    return SDL_WINDOWPOS_CENTERED;
+    return mWindow != nullptr ? mRect->y() : SDL_WINDOWPOS_CENTERED;
 }
 
 int Window::width()
 {
-    if (mWindow)
-    {
-        SDL_GetWindowSize(mWindow, &(mMode.w), &(mMode.h));
-        return mMode.w;
-    }
-
-    return WINDOW_DEFAULT_WIDTH;
+    return mWindow != nullptr ? mRect->width() : WINDOW_DEFAULT_WIDTH;
 }
 
 int Window::height()
 {
-    if (mWindow)
-    {
-        SDL_GetWindowSize(mWindow, &(mMode.w), &(mMode.h));
-        return mMode.w;
-    }
-
-    return WINDOW_DEFAULT_HEIGHT;
+    return mWindow != nullptr ? mRect->height() : WINDOW_DEFAULT_HEIGHT;
 }
 
 void Window::run()
@@ -90,6 +67,25 @@ void Window::run()
                 break;
 
             case SDL_WINDOWEVENT:
+            {
+                Uint8 windowEvent = event.window.event;
+                if (windowEvent == SDL_WINDOWEVENT_RESIZED ||
+                    windowEvent == SDL_WINDOWEVENT_SIZE_CHANGED)
+                {
+                    int w, h;
+                    SDL_GetWindowSize(mWindow, &w, &h);
+                    mRect->setWidth(w);
+                    mRect->setHeight(h);
+                    resizeGL(w, h);
+                }
+                else if (windowEvent == SDL_WINDOWEVENT_MOVED)
+                {
+                    int x, y;
+                    SDL_GetWindowPosition(mWindow, &x, &y);
+                    mRect->setX(x);
+                    mRect->setY(y);
+                }
+            }
                 break;
 
             case SDL_QUIT:
@@ -146,7 +142,6 @@ void Window::renderGL()
 
 void Window::mouseButtonEvent(SDL_MouseButtonEvent *event)
 {
-
 }
 
 void Window::mouseMotionEvent(SDL_MouseMotionEvent *event)
@@ -162,7 +157,7 @@ void Window::keyupEvent(SDL_KeyboardEvent *event)
 }
 
 void Window::createWindow()
-{
+{   
     mMode.w = WINDOW_DEFAULT_WIDTH;
     mMode.h = WINDOW_DEFAULT_HEIGHT;
 
@@ -205,6 +200,10 @@ void Window::createWindow()
         return;
     }
 
+    int x, y;
+    SDL_GetWindowPosition(mWindow, &x, &y);
+    mRect = new Rectangle(y, y + mMode.h, x, x + mMode.w);
+
     if (glewInit() != GLEW_OK)
         exit(EXIT_FAILURE);
 
@@ -219,6 +218,10 @@ void Window::closeWindow()
     if (mWindow)
         SDL_DestroyWindow(mWindow);
 
+    if (mRect)
+        delete mRect;
+
     mContext = nullptr;
     mWindow = nullptr;
+    mRect = nullptr;
 }

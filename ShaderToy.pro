@@ -3,73 +3,98 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
+INCLUDEPATH += ./include
+
 LIBS += -lSDL2 -lGL -lGLEW
 
 SOURCES += \
-    texture.cpp \
-    vector2.inl \
-    vector3.inl \
-    vector4.inl \
-    window.cpp \
+    bufferobject.cpp \
+    camera.cpp \
+    filesystem.cpp \
     framebuffer.cpp \
     framerate.cpp \
     main.cpp \
-    matrix2x2.inl \
-    matrix2x3.inl \
-    matrix2x4.inl \
-    matrix3x2.inl \
-    matrix3x3.inl \
-    matrix3x4.inl \
-    matrix4x2.inl \
-    matrix4x3.inl \
-    matrix4x4.inl \
+    point.cpp \
+    pointF.cpp \
+    rectangle.cpp \
+    rectangleF.cpp \
+    renderer.cpp \
     shader.cpp \
     shaderprogram.cpp \
     shaders.cpp \
     shadertoy.cpp \
-    camera.cpp \
+    size.cpp \
+    sizeF.cpp \
+    texture.cpp \
     vertexarrayobject.cpp \
-    bufferobject.cpp \
-    renderer.cpp \
-    filesystem.cpp
+    window.cpp \
+    matrix2x2.cpp \
+    matrix2x3.cpp \
+    matrix2x4.cpp \
+    matrix3x2.cpp \
+    matrix3x3.cpp \
+    matrix3x4.cpp \
+    matrix4x2.cpp \
+    matrix4x3.cpp \
+    matrix4x4.cpp \
+    vector4.cpp \
+    vector3.cpp \
+    vector2.cpp \
+    transform.cpp \
+    quaternion.cpp \
+    eulerangles.cpp
 
 HEADERS += \
-    matrix3x2.h \
-    texture.h \
-    vector2.h \
-    vector3.h \
-    vector4.h \
-    window.h \
-    common.h \
-    framerate.h \
-    math_util.h \
-    matrix2x2.h \
-    matrix2x3.h \
-    matrix2x4.h \
-    matrix3x2.h \
-    matrix3x3.h \
-    matrix3x4.h \
-    matrix4x2.h \
-    matrix4x3.h \
-    matrix4x4.h \
-    shader.h \
-    shaderprogram.h \
-    shaders.h \
-    shadertoy.h \
-    g_math.h \
-    camera.h \
-    vertexarrayobject.h \
-    framebuffer.h \
-    shaderinput.h \
-    bufferobject.h \
-    renderer.h \
-    stb_image.h \
-    stb_image_write.h \
-    filesystem.h
+    include/bufferobject.h \
+    include/camera.h \
+    include/common.h \
+    include/eulerangles.h \
+    include/filesystem.h \
+    include/framebuffer.h \
+    include/framerate.h \
+    include/g_math.h \
+    include/math_util.h \
+    include/matrix2x2.h \
+    include/matrix2x3.h \
+    include/matrix2x4.h \
+    include/matrix3x2.h \
+    include/matrix3x3.h \
+    include/matrix3x4.h \
+    include/matrix4x2.h \
+    include/matrix4x3.h \
+    include/matrix4x4.h \
+    include/point.h \
+    include/pointF.h \
+    include/quaternion.h \
+    include/rectangle.h \
+    include/rectangleF.h \
+    include/renderer.h \
+    include/shader.h \
+    include/shaderinput.h \
+    include/shaderprogram.h \
+    include/shaders.h \
+    include/shadertoy.h \
+    include/size.h \
+    include/sizeF.h \
+    include/stb_image_write.h \
+    include/stb_image.h \
+    include/texture.h \
+    include/transform.h \
+    include/vector2.h \
+    include/vector3.h \
+    include/vector4.h \
+    include/vertexarrayobject.h \
+    include/window.h \
+    include/rectangle.h \
 
 
 SUBDIRS += \
+    ShaderToy.pro \
     ShaderToy.pro
 
 DISTFILES += \
-    ShaderToy.pro.use
+    ShaderToy.pro.use \
+    README.md \
+    ShaderToy.pro.use \
+    ShaderToy.pro.user \
+    README.md
