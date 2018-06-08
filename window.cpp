@@ -133,6 +133,10 @@ void Window::initilizeGL()
 
 void Window::resizeGL(int w, int h)
 {
+    int _w, _h;
+    SDL_GL_GetDrawableSize(mWindow, &_w, &_h);
+    mDrawRect->setWidth(_w);
+    mDrawRect->setHeight(_h);
 }
 
 void Window::renderGL()
@@ -200,9 +204,12 @@ void Window::createWindow()
         return;
     }
 
-    int x, y;
-    SDL_GetWindowPosition(mWindow, &x, &y);
+    int x, y, w, h;
+    SDL_GetWindowPosition(mWindow, &x, &y);   
+    SDL_GL_GetDrawableSize(mWindow, &w, &h);
+
     mRect = new Rectangle(y, y + mMode.h, x, x + mMode.w);
+    mDrawRect = new Rectangle(0, h, 0, w);
 
     if (glewInit() != GLEW_OK)
         exit(EXIT_FAILURE);
@@ -221,7 +228,11 @@ void Window::closeWindow()
     if (mRect)
         delete mRect;
 
+    if (mDrawRect)
+        delete mDrawRect;
+
     mContext = nullptr;
     mWindow = nullptr;
     mRect = nullptr;
+    mDrawRect = nullptr;
 }

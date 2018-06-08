@@ -220,6 +220,8 @@ void ShaderToy::resizeGL(int w, int h)
 
     mInput.iResolution.setX(w * 1.0f);
     mInput.iResolution.setY(h * 1.0f);
+
+    Window::resizeGL(w, h);
 }
 
 void ShaderToy::renderGL()
@@ -273,9 +275,9 @@ void ShaderToy::mouseButtonEvent(SDL_MouseButtonEvent *event)
     }
     else if (event->type == SDL_MOUSEBUTTONDOWN)
     {
-        const Rectangle *_rect = rect();
-        mInput.iMouse.setZ(Math::floor(event->x - _rect->left()));
-        mInput.iMouse.setW(Math::floor(height() - (event->y - _rect->top())));
+        const Rectangle *rect = drawableRect();
+        mInput.iMouse.setZ(Math::floor(event->x - rect->left()) / rect->width() * width());
+        mInput.iMouse.setW(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
         mInput.iMouse.setX(mInput.iMouse.z());
         mInput.iMouse.setY(mInput.iMouse.w());
     }
@@ -283,7 +285,7 @@ void ShaderToy::mouseButtonEvent(SDL_MouseButtonEvent *event)
 
 void ShaderToy::mouseMotionEvent(SDL_MouseMotionEvent *event)
 {
-    const Rectangle *_rect = rect();
-    mInput.iMouse.setX(Math::floor(event->xrel - _rect->left()));
-    mInput.iMouse.setY(Math::floor(height() - (event->yrel - _rect->top())));
+    const Rectangle *rect = drawableRect();
+    mInput.iMouse.setX(Math::floor(event->x - rect->left()) / rect->width() * width());
+    mInput.iMouse.setY(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
 }
