@@ -33,10 +33,16 @@ char *FileSystem::readAll(const char *filename)
 
     char *buffer = new char[size + 1];
     fpos_t pos;
+#ifndef WIN32
     pos.__pos = 0;
+#endif
 
     while (!feof(fp)) {
+#ifdef WIN32
+       fgets(buffer + pos, size, fp);
+#else
        fgets((buffer + pos.__pos), size, fp);
+#endif
        fgetpos(fp, &pos);
     }
 
