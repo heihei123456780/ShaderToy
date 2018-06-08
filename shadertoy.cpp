@@ -241,7 +241,7 @@ void ShaderToy::renderGL()
                       date->tm_min * 60.0f + (float)date->tm_sec);
 
     mInput.iFrame += mFPS.frameCount();
-    mInput.iTimeDelta =  mFPS.frameRateDelay() * 1.0f;
+    mInput.iTimeDelta =  mFPS.frameRateDelay() / 1000.0f;
     mInput.iFrameRate = 1.0f / mInput.iTimeDelta;
 
     bindUniform();
@@ -268,21 +268,22 @@ void ShaderToy::mouseButtonEvent(SDL_MouseButtonEvent *event)
 {
     if (event->type == SDL_MOUSEBUTTONUP)
     {
-        mInput.iMouse.setX(-Math::abs(mInput.iMouse.x()));
-        mInput.iMouse.setY(-Math::abs(mInput.iMouse.y()));
-    } else if (event->type == SDL_MOUSEBUTTONDOWN)
+        mInput.iMouse.setZ(-Math::abs(mInput.iMouse.z()));
+        mInput.iMouse.setW(-Math::abs(mInput.iMouse.w()));
+    }
+    else if (event->type == SDL_MOUSEBUTTONDOWN)
     {
         const Rectangle *_rect = rect();
-        mInput.iMouse.setX(Math::floor(event->x - _rect->left()));
-        mInput.iMouse.setY(Math::floor(height() - (event->y - _rect->top())));
-        mInput.iMouse.setZ(mInput.iMouse.x());
-        mInput.iMouse.setW(mInput.iMouse.y());
+        mInput.iMouse.setZ(Math::floor(event->x - _rect->left()));
+        mInput.iMouse.setW(Math::floor(height() - (event->y - _rect->top())));
+        mInput.iMouse.setX(mInput.iMouse.z());
+        mInput.iMouse.setY(mInput.iMouse.w());
     }
 }
 
 void ShaderToy::mouseMotionEvent(SDL_MouseMotionEvent *event)
 {
     const Rectangle *_rect = rect();
-    mInput.iMouse.setZ(Math::floor(event->xrel - _rect->left()));
-    mInput.iMouse.setW(Math::floor(height() - (event->yrel - _rect->top())));
+    mInput.iMouse.setX(Math::floor(event->xrel - _rect->left()));
+    mInput.iMouse.setY(Math::floor(height() - (event->yrel - _rect->top())));
 }
