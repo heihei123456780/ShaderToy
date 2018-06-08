@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bufferobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="eulerangles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="framerate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix2x2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix2x3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix2x4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix4x4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pointF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="quaternion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rectangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rectangleF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shaderprogram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shadertoy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="size.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sizeF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vector4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vertexarrayobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\bufferobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\eulerangles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\filesystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\framerate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\g_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix2x2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix2x3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix2x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix3x2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix3x3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix3x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix4x2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix4x3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\matrix4x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pointF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rectangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rectangleF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaderinput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaderprogram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shadertoy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\size.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sizeF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stb_image_write.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vertexarrayobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <Filter>Distribution Files</Filter>
+    </None>
+    <None Include="ShaderToy.pro.use">
+      <Filter>Distribution Files</Filter>
+    </None>
+    <None Include="ShaderToy.pro.user">
+      <Filter>Distribution Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

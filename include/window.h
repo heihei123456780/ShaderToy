@@ -26,6 +26,7 @@ public:
     int height();
 
     const Rectangle *rect() const { return mRect; }
+    const Rectangle *drawableRect() const { return mDrawRect; }
 
     void run();
 
@@ -50,7 +51,7 @@ private:
     SDL_Window *mWindow;
     SDL_DisplayMode mMode;
     SDL_GLContext mContext;
-    Rectangle *mRect;
+    Rectangle *mRect, *mDrawRect;
 };
 
 #endif // GLWINDOW_H
