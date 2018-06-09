@@ -119,12 +119,24 @@ void Window::resize(int w, int h)
     }
 }
 
-void Window::setTitile(const std::string &title)
+void Window::setTitile(const char *title)
 {
     if (mWindow)
     {
-        SDL_SetWindowTitle(mWindow, title.c_str());
+        SDL_SetWindowTitle(mWindow, title);
     }
+}
+
+void Window::setWindowIcon(const unsigned char *pixels, int size)
+{
+	SDL_RWops *rw = SDL_RWFromMem((void *)pixels, size);
+	SDL_Surface *icon = SDL_LoadBMP_RW(rw, 1);
+	if (icon == nullptr)
+		SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s\n", SDL_GetError());
+
+	SDL_SetWindowIcon(mWindow, icon);
+	SDL_FreeSurface(icon);
+	SDL_RWclose(rw);
 }
 
 void Window::initilizeGL()
@@ -133,10 +145,6 @@ void Window::initilizeGL()
 
 void Window::resizeGL(int w, int h)
 {
-    int _w, _h;
-    SDL_GL_GetDrawableSize(mWindow, &_w, &_h);
-    mDrawRect->setWidth(_w);
-    mDrawRect->setHeight(_h);
 }
 
 void Window::renderGL()
@@ -204,12 +212,12 @@ void Window::createWindow()
         return;
     }
 
-    int x, y, w, h;
-    SDL_GetWindowPosition(mWindow, &x, &y);   
-    SDL_GL_GetDrawableSize(mWindow, &w, &h);
+	int x, y, w, h;
+	SDL_GetWindowPosition(mWindow, &x, &y);
+	SDL_GL_GetDrawableSize(mWindow, &w, &h);
 
-    mRect = new Rectangle(y, y + mMode.h, x, x + mMode.w);
-    mDrawRect = new Rectangle(0, h, 0, w);
+	mRect = new Rectangle(y, y + mMode.h, x, x + mMode.w);
+	mDrawRect = new Rectangle(0, h, 0, w);
 
     if (glewInit() != GLEW_OK)
         exit(EXIT_FAILURE);
@@ -228,11 +236,7 @@ void Window::closeWindow()
     if (mRect)
         delete mRect;
 
-    if (mDrawRect)
-        delete mDrawRect;
-
     mContext = nullptr;
     mWindow = nullptr;
     mRect = nullptr;
-    mDrawRect = nullptr;
 }

@@ -29,12 +29,12 @@ Texture::~Texture()
 void Texture::loadFromFile(const char*filename)
 {
     stbi_set_flip_vertically_on_load(mVFlip);
-
+	
     int w, h, n;
     GLubyte *pixels = stbi_load(filename, &w, &h, &n, STBI_rgb_alpha);
     if (pixels == nullptr)
         return;
-
+	
     if (mTarget == GL_TEXTURE_CUBE_MAP) {
         for (int i = 0; i < 6; i++) {
             loadPixels(&pixels[i * w * w * n], w, h, 1, n, false, i);
@@ -42,6 +42,8 @@ void Texture::loadFromFile(const char*filename)
     } else {
         loadPixels(pixels, w, h, 1, n, false, 0);
     }
+	
+	stbi_image_free(pixels);
 }
 
 void Texture::loadFromePixels(GLubyte *pixels, int w, int h, int depth, int channels, bool isFloat)
@@ -62,7 +64,6 @@ void Texture::createEmpty(int w, int h)
 
 
 }
-
 
 void Texture::loadPixels(GLubyte *pixels, int w, int h, int depth, int channels, bool isFloat, int cubemapLayer)
 {

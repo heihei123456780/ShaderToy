@@ -11,9 +11,7 @@
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
 
-#include <GLFW/glfw3.h>
 #include <time.h>
-#include <sys/time.h>
 
 #define NUMBER(n) n < 10 ? 0 : int(n / 10)
 
@@ -36,6 +34,7 @@ ShaderToy::ShaderToy()
       mProgram(nullptr)
 
 {
+	//setWindowIcon(icon, sizeof(icon));
 }
 
 ShaderToy::~ShaderToy()
@@ -74,10 +73,14 @@ void ShaderToy::addUserFragmentMainCode(const char *fragmentMain)
 
     fragment.append(fragmentMain);
     fragment.append(fragmentShaderPassFooter);
+	
+#ifdef DEBUG
+	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s\n", fragment.c_str());
+#endif
 
     mProgram = new ShaderProgram();
     mProgram->addShaderFromSource(Shader::ShaderType::Vertex, vertexShader);
-    mProgram->addShaderFromSource(Shader::ShaderType::Fragment, fragment);
+    mProgram->addShaderFromSource(Shader::ShaderType::Fragment, fragment.c_str());
     mProgram->link();
 
     if (!mProgram->isLinked())
@@ -105,19 +108,17 @@ bool ShaderToy::screenshot()
 
     size_t len = strlen(homepath);
 
-    char filename[len + 20];
+    char *filename = new char[len + 20];
     sprintf(filename, "%s/%d%d%d%d%d%d%d%d%d%d%d.png", homepath, dt->tm_year + 1900, NUMBER(dt->tm_mon + 1),
             (dt->tm_mon + 1) % 10, NUMBER(dt->tm_mday), dt->tm_mday % 10, NUMBER(dt->tm_hour),
             dt->tm_hour % 10, NUMBER(dt->tm_min), dt->tm_min % 10, NUMBER(dt->tm_sec),
             dt->tm_sec % 10);
-
-    if (Texture::savePixelsToFile(filename, pixels, w, h, 4) == false)
-    {
-        delete[] pixels;
-        return false;
-    }
-
-    return true;
+	
+	bool ret = Texture::savePixelsToFile(filename, pixels, w, h, 4);
+	
+	delete[] pixels;
+	delete[] filename;
+    return ret;
 }
 
 void ShaderToy::initilizeUniformValue()
@@ -220,8 +221,6 @@ void ShaderToy::resizeGL(int w, int h)
 
     mInput.iResolution.setX(w * 1.0f);
     mInput.iResolution.setY(h * 1.0f);
-
-    Window::resizeGL(w, h);
 }
 
 void ShaderToy::renderGL()
@@ -252,40 +251,42 @@ void ShaderToy::renderGL()
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     mVAO->release();
 
+	sprintf(title, "ShaderToy FPS: %-2.2f", mInput.iFrameRate);
+	setTitile(title);
     Window::renderGL();
 }
 
 void ShaderToy::keydownEvent(SDL_KeyboardEvent *event)
 {
-    if (event->keysym.sym == SDLK_x)
-    {
-        if (screenshot() == false)
-        {
-            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Save screenshot failed\n");
-        }
-    }
+	if (event->keysym.sym == SDLK_x)
+	{
+		if (screenshot() == false)
+		{
+			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Save screenshot failed\n");
+		}
+	}
 }
 
 void ShaderToy::mouseButtonEvent(SDL_MouseButtonEvent *event)
 {
-    if (event->type == SDL_MOUSEBUTTONUP)
-    {
-        mInput.iMouse.setZ(-Math::abs(mInput.iMouse.z()));
-        mInput.iMouse.setW(-Math::abs(mInput.iMouse.w()));
-    }
-    else if (event->type == SDL_MOUSEBUTTONDOWN)
-    {
-        const Rectangle *rect = drawableRect();
-        mInput.iMouse.setZ(Math::floor(event->x - rect->left()) / rect->width() * width());
-        mInput.iMouse.setW(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
-        mInput.iMouse.setX(mInput.iMouse.z());
-        mInput.iMouse.setY(mInput.iMouse.w());
-    }
+	if (event->type == SDL_MOUSEBUTTONUP)
+	{
+		mInput.iMouse.setZ(-Math::abs(mInput.iMouse.z()));
+		mInput.iMouse.setW(-Math::abs(mInput.iMouse.w()));
+	}
+	else if (event->type == SDL_MOUSEBUTTONDOWN)
+	{
+		const Rectangle *rect = drawableRect();
+		mInput.iMouse.setZ(Math::floor(event->x - rect->left()) / rect->width() * width());
+		mInput.iMouse.setW(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
+		mInput.iMouse.setX(mInput.iMouse.z());
+		mInput.iMouse.setY(mInput.iMouse.w());
+	}
 }
 
 void ShaderToy::mouseMotionEvent(SDL_MouseMotionEvent *event)
 {
-    const Rectangle *rect = drawableRect();
-    mInput.iMouse.setX(Math::floor(event->x - rect->left()) / rect->width() * width());
-    mInput.iMouse.setY(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
+	const Rectangle *rect = drawableRect();
+	mInput.iMouse.setX(Math::floor(event->x - rect->left()) / rect->width() * width());
+	mInput.iMouse.setY(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
 }

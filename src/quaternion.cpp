@@ -468,10 +468,11 @@ bool operator!=(const Quaternion &q1, const Quaternion &q2)
             q1.m_w != q2.m_w);
 }
 
-Quaternion operator-(Quaternion &quad)
+Quaternion &operator-(Quaternion &quad)
 {
     quad.m_w = -quad.m_w;
     quad.m_x = -quad.m_x;
     quad.m_y = -quad.m_y;
     quad.m_z = -quad.m_z;
+	return quad;
 }

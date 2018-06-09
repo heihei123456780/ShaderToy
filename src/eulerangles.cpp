@@ -1,4 +1,6 @@
-inline void EulerAngles::identity()
+#include "eulerangles.h"
+
+void EulerAngles::identity()
 {
     m_yaw   = 0.0f;
     m_roll  = 0.0f;

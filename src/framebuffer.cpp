@@ -1,5 +1,4 @@
 #include "framebuffer.h"
-#include <sys/time.h>
 
 FrameBuffer::FrameBuffer()
     : mFrameBufferId(0),

@@ -1,21 +1,20 @@
 #include "shaders.h"
 
 const char *vertexShader =
-    "#version 330 core\n"
-    "precision highp float;\n"
-    "precision highp int;\n"
-    "layout (location = 0) in vec3 vPosition;\n"
+	"#version 330 core\n"
+    "precision mediump float;\n"
+    "precision mediump int;\n"
+	"layout (location = 0) in vec3 vPosition;\n"
     "layout (location = 1) in vec2 vUV;\n"
     "void main() {\n"
     "    gl_Position = vec4(vPosition, 1.0f);\n"
     "}";
 
-const char *fragmentShaderPassHeader =
+const char *fragmentShaderPassHeader =	
     "#version 330 core\n"
-    "precision highp float;\n"
-    "precision highp int;\n"
-    "precision highp sampler2D;"
-    "uniform vec3       iResolution;\n"
+    "precision mediump float;\n"
+    "precision mediump int;\n"
+	"uniform vec3       iResolution;\n"
     "uniform float      iGlobalTime;\n"
     "uniform float      iTime;\n"
     "uniform float      iChannelTime[4];\n"
