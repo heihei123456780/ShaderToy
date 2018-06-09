@@ -6,7 +6,6 @@ class Vector4;
 class Matrix3x3;
 class EulerAngles;
 
-
 class Quaternion
 {
 public:
@@ -107,7 +106,7 @@ public:
 
     friend Quaternion operator+(const Quaternion &q1, const Quaternion &q2) { return add(q1, q2); }
     friend Quaternion operator-(const Quaternion &q1, const Quaternion &q2) { return subtract(q1, q2); }
-    friend Quaternion operator-(Quaternion &quad);
+    friend Quaternion &operator-(Quaternion &quad);
     friend Quaternion operator*(float factor, const Quaternion &quad) { return multiply(factor, quad); }
     friend Quaternion operator*(const Quaternion &quad, float factor) { return multiply(quad, factor); }
     friend Quaternion operator*(const Quaternion &q1, const Quaternion &q2) { return multiply(q1, q2); }

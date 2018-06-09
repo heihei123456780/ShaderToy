@@ -111,7 +111,7 @@ public:
 	inline Size size() const { return Size(m_r - m_l, m_b - m_t); }
     inline void setSize(const Size &s) { m_r = m_l + s.width(); m_b = m_t + s.height(); }
 
-    inline void moveTo(int dx, int dy);
+    inline void moveTo(int ax, int ay);
     inline void moveTo(const Point &point);
 
     inline void moveTop(int top) 
@@ -183,12 +183,13 @@ public:
     //Rectangle operator&(Rectangle &rect1, Rectangle &rect2) { return Rectangle::intersects(rect1, rect2); }
     //Rectangle operator|(const Rectangle &rect1, const Rectangle &rect2) { return Rectangle::unions(rect1, rect2); }
 
-    friend bool operator==(const Rectangle &rect1, const Rectangle &rect2);
-    friend bool operator!=(const Rectangle &rect1, const Rectangle &rect2);
+    friend bool operator==(const Rectangle &r1, const Rectangle &r2);
+    friend bool operator!=(const Rectangle &r1, const Rectangle &r2);
 
 private:
     // top, bottom, left, down
     int m_t, m_b, m_l, m_r;
 };
+
 
 #endif // RECTANGLE_H

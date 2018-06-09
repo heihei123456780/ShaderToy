@@ -40,6 +40,7 @@ private:
     ShaderProgram *mProgram;
     VertexArrayObject *mVAO;
     std::vector<Texture *> mTextures;
+	char title[20];
 };
 
 #endif // SHADER_TOY_H

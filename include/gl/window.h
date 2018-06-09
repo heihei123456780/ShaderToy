@@ -32,7 +32,9 @@ public:
 
     void move(int x, int y);
     void resize(int w, int h);
-    void setTitile(const std::string &title);
+
+    void setTitile(const char *title);
+	void setWindowIcon(const unsigned char *pixels, int size);
 
 protected:
     virtual void initilizeGL();

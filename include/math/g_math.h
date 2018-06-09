@@ -9,14 +9,14 @@
 class Math
 {
 public:
-    inline static float acos(float radian) { return __builtin_acosf(radian); }
-    inline static float asin(float radian) { return __builtin_asinf(radian); }
-    inline static float atan(float radian) { return __builtin_atanf(radian); }
-    inline static float atan2(float r1, float r2) { return __builtin_atan2f(r1, r2); }
-    inline static float cos(float radian) { return __builtin_cosf(radian); }
-    inline static float sin(float radian) { return __builtin_sinf(radian); }
-    inline static float tan(float radian) { return __builtin_tanf(radian); }
-    inline static float cot(float radian) { return 1.0f / __builtin_tanf(radian); }
+    inline static float acos(float radian) { return acosf(radian); }
+    inline static float asin(float radian) { return asinf(radian); }
+    inline static float atan(float radian) { return atanf(radian); }
+    inline static float atan2(float r1, float r2) { return atan2f(r1, r2); }
+    inline static float cos(float radian) { return cosf(radian); }
+    inline static float sin(float radian) { return sinf(radian); }
+    inline static float tan(float radian) { return tanf(radian); }
+    inline static float cot(float radian) { return 1.0f / tanf(radian); }
     
     inline static int max(int a, int b) {  return a > b ? a : b; }
     inline static float max(float a, float b) { return a > b ? a : b; }
@@ -26,17 +26,17 @@ public:
     inline static float min(float a, float b) { return a < b ? a : b; }
     inline static double min(double a, double b) { return a < b ? a : b; }
     
-    inline static float log(float n) { return __builtin_log(n); }
-    inline static float log10(float n) { return __builtin_log10(n); }
+    inline static float log(float n) { return log(n); }
+    inline static float log10(float n) { return log10(n); }
 
-    inline static float abs(float f) { return __builtin_fabsf(f); }
-    inline static float fabs(float f) { return __builtin_fabsf(f); }
-    inline static float exp(float f) { return __builtin_expf(f); }
-    inline static float fmod(float f1, float f2) { return __builtin_fmodf(f1, f2); }
-    inline static float ceil(float f) { return __builtin_ceilf(f); } 
-    inline static float floor(float f) { return __builtin_floor(f); }
-    inline static float pow(float n, float i) { return __builtin_powf(n, i); }
-    inline static float round(float f) { return __builtin_roundf(f); }
+    inline static float abs(float f) { return fabsf(f); }
+    inline static float fabs(float f) { return fabsf(f); }
+    inline static float exp(float f) { return expf(f); }
+    inline static float fmod(float f1, float f2) { return fmodf(f1, f2); }
+    inline static float ceil(float f) { return ceilf(f); } 
+    inline static float floor(float f) { return floorf(f); }
+    inline static float pow(float n, float i) { return powf(n, i); }
+    inline static float round(float f) { return roundf(f); }
     inline static float sqr(float f) { return f * f; }
     inline static float sqrt(float f) { return 1.0f / MathUtil::fast_sqrt_inverse(f); }
 

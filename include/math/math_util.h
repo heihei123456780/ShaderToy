@@ -22,12 +22,12 @@ inline float MathUtil::fast_sqrt_inverse(float f)
 
 inline float fast_cos(float radian)
 {
-    return 0.0f;
+    return 1.0f;
 }
 
 inline float fast_sin(float radian)
 {
-    return 0.0f;
+    return 1.0f;
 }
 
 #endif // MATH_UTIL_H
