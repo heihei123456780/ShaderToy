@@ -1,2 +1,8 @@
-# ShaderToy-Desktop
-Rewrite ShaderToy using C++ with SDL and OpenGL, You can view shader effect offline.
+# ShaderToy 桌面版
+
+    曾经学过绘画，对艺术方面有兴趣。而大学期间学了编程，因为对于艺术的兴趣使我对于程序员的三大浪漫之一的计算机
+图形学有者浓厚的兴趣。偶然接触到了ShaderToy这个令人惊喜的网站，发现使用浏览器打开的速度过慢，便催生了用C++写一
+个桌面版的ShaderToy的想法, 方便自己自由的编写着色器代码。  
+    项目使用了开源的SDL2库和GLEW, SDL2库是一个优秀的多媒体开发框架，它的存在使我不用考虑建立窗口和捕获键盘和
+鼠标事件以及OpenGL上下文的建立。GLEW的存在是方便获取到OpenGL的扩展函数和运行时函数指针。
+
