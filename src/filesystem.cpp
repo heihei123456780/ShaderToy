@@ -11,8 +11,8 @@ const char *FileSystem::fileExtName(const char *filename)
 
     size_t len = strlen(filename);
     for (int i = len - 1; i >= 0; i--) {
-        if (filename[i] == '.')
-            return (filename + i);
+        if (filename[i] == '.' && i + 1 < len)
+            return (filename + i + 1);
     }
 
     return nullptr;

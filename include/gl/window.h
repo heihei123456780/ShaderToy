@@ -34,21 +34,24 @@ public:
     void resize(int w, int h);
 
     void setTitile(const char *title);
-	void setWindowIcon(const unsigned char *pixels, int size);
+    void setWindowIcon(const unsigned char *pixels, int w, int h, int n);
 
 protected:
     virtual void initilizeGL();
     virtual void resizeGL(int w, int h);
     virtual void renderGL();
 
-    virtual void mouseButtonEvent(SDL_MouseButtonEvent *event);
-    virtual void mouseMotionEvent(SDL_MouseMotionEvent *event);
     virtual void keydownEvent(SDL_KeyboardEvent *event);
     virtual void keyupEvent(SDL_KeyboardEvent *event);
+    virtual void mouseButtonUpEvent(SDL_MouseButtonEvent *event);
+    virtual void mouseButtonDownEvent(SDL_MouseButtonEvent *event);
+    virtual void mouseMotionEvent(SDL_MouseMotionEvent *event);
 
 private:
     void createWindow();
     void closeWindow();
+
+    bool mMouseIsDown;
 
     SDL_Window *mWindow;
     SDL_DisplayMode mMode;

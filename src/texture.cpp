@@ -29,9 +29,8 @@ Texture::~Texture()
 void Texture::loadFromFile(const char*filename)
 {
     stbi_set_flip_vertically_on_load(mVFlip);
-	
     int w, h, n;
-    GLubyte *pixels = stbi_load(filename, &w, &h, &n, STBI_rgb_alpha);
+    GLubyte *pixels = stbi_load(filename, &w, &h, &n, STBI_rgb);
     if (pixels == nullptr)
         return;
 	
@@ -44,6 +43,7 @@ void Texture::loadFromFile(const char*filename)
     }
 	
 	stbi_image_free(pixels);
+    pixels = nullptr;
 }
 
 void Texture::loadFromePixels(GLubyte *pixels, int w, int h, int depth, int channels, bool isFloat)

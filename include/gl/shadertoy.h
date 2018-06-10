@@ -16,7 +16,7 @@ public:
     ShaderToy();
     ~ShaderToy();
 
-    void addTexture(std::vector<const char *> texFileNames);
+    void addTexture(std::vector<const char *> &texFileNames);
     void addUserFragmentMainCode(const char *fragmentMain);
     bool screenshot();
 
@@ -26,19 +26,21 @@ protected:
     void renderGL() override;
 
     void keydownEvent(SDL_KeyboardEvent *event) override;
-    void mouseButtonEvent(SDL_MouseButtonEvent *event) override;
+    void mouseButtonUpEvent(SDL_MouseButtonEvent *event) override;
+    void mouseButtonDownEvent(SDL_MouseButtonEvent *event) override;
     void mouseMotionEvent(SDL_MouseMotionEvent *event) override;
 
 private:
+    void createIcon(const unsigned char *buffer, size_t size);
     void initilizeUniformValue();
     void bindUniform();
 
     FrameRate  mFPS;
     ShaderInput mInput;
+    VertexArrayObject *mVAO;
     BufferObject *mVBOArray;
     BufferObject *mVBOIndex;
     ShaderProgram *mProgram;
-    VertexArrayObject *mVAO;
     std::vector<Texture *> mTextures;
 	char title[20];
 };

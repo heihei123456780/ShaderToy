@@ -4,7 +4,8 @@
 Window::Window()
     : mWindow(nullptr),
       mContext(nullptr),
-      mRect(nullptr)
+      mRect(nullptr),
+      mDrawRect(nullptr)
 {
     createWindow();
 }
@@ -51,19 +52,26 @@ void Window::run()
             switch (event.type)
             {
             case SDL_KEYDOWN:
-                keydownEvent(&(event.key));
+                keydownEvent(&event.key);
                 break;
 
             case SDL_KEYUP:
-                keyupEvent(&(event.key));
+                keyupEvent(&event.key);
+                break;
+
+            case SDL_MOUSEBUTTONUP:
+                mMouseIsDown = false;
+                mouseButtonUpEvent(&event.button);
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
-                mouseButtonEvent(&(event.button));
+                mMouseIsDown = true;
+                mouseButtonDownEvent(&event.button);
                 break;
 
             case SDL_MOUSEMOTION:
-                mouseMotionEvent(&(event.motion));
+                if (mMouseIsDown == true)
+                    mouseMotionEvent(&event.motion);
                 break;
 
             case SDL_WINDOWEVENT:
@@ -76,6 +84,10 @@ void Window::run()
                     SDL_GetWindowSize(mWindow, &w, &h);
                     mRect->setWidth(w);
                     mRect->setHeight(h);
+
+                    SDL_GL_GetDrawableSize(mWindow, &w, &h);
+                    mDrawRect->setWidth(w);
+                    mDrawRect->setHeight(h);
                     resizeGL(w, h);
                 }
                 else if (windowEvent == SDL_WINDOWEVENT_MOVED)
@@ -127,16 +139,14 @@ void Window::setTitile(const char *title)
     }
 }
 
-void Window::setWindowIcon(const unsigned char *pixels, int size)
+void Window::setWindowIcon(const unsigned char *pixels, int w, int h, int n)
 {
-	SDL_RWops *rw = SDL_RWFromMem((void *)pixels, size);
-	SDL_Surface *icon = SDL_LoadBMP_RW(rw, 1);
+    SDL_Surface *icon = SDL_CreateRGBSurfaceWithFormatFrom((void *)pixels, w, h, n, w * n, SDL_PIXELFORMAT_RGBA32);
 	if (icon == nullptr)
 		SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s\n", SDL_GetError());
 
 	SDL_SetWindowIcon(mWindow, icon);
 	SDL_FreeSurface(icon);
-	SDL_RWclose(rw);
 }
 
 void Window::initilizeGL()
@@ -152,7 +162,11 @@ void Window::renderGL()
     SDL_GL_SwapWindow(mWindow);
 }
 
-void Window::mouseButtonEvent(SDL_MouseButtonEvent *event)
+void Window::mouseButtonUpEvent(SDL_MouseButtonEvent *event)
+{
+}
+
+void Window::mouseButtonDownEvent(SDL_MouseButtonEvent *event)
 {
 }
 

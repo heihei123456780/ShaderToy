@@ -1,8 +1,12 @@
 #include "vector3.h"
 #include "vector4.h"
 
+#define STBI_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "shaders.h"
 #include "texture.h"
+#include "resource.h"
 #include "framerate.h"
 #include "rectangle.h"
 #include "shadertoy.h"
@@ -10,6 +14,12 @@
 #include "bufferobject.h"
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
+
+#ifdef WIN32
+  #include <windows.h>
+#else
+  #include <sys/time.h>
+#endif
 
 #include <time.h>
 
@@ -27,6 +37,21 @@ GLuint indices[] = {
     0, 2, 3
 };
 
+
+static struct tm *t;
+
+inline static float mseconds()
+{
+#ifdef WIN32
+    return 0.0f;
+#else
+    static struct timeval tv;
+    gettimeofday(&tv, nullptr);
+    t = localtime(&tv.tv_sec);
+    return tv.tv_usec * 0.000001f;
+#endif
+}
+
 ShaderToy::ShaderToy()
     : mVAO(nullptr),
       mVBOArray(nullptr),
@@ -34,7 +59,7 @@ ShaderToy::ShaderToy()
       mProgram(nullptr)
 
 {
-	//setWindowIcon(icon, sizeof(icon));
+    createIcon(icon, 4684);
 }
 
 ShaderToy::~ShaderToy()
@@ -43,19 +68,24 @@ ShaderToy::~ShaderToy()
     delete mVBOArray;
     delete mVBOIndex;
     delete mProgram;
+
+    auto size = mTextures.size();
+    for (int i = 0; i < size; i++)
+        delete mTextures[i];
 }
 
-void ShaderToy::addTexture(std::vector<const char *> texFileNames)
+void ShaderToy::addTexture(std::vector<const char *> &texFileNames)
 {
     auto size = texFileNames.size();
     for (int i = 0; i < size; i++)
     {
-        /*Texture *texture = new Texture(GL_TEXTURE_2D, texFileNames[i].c_str());
+        Texture *texture = new Texture(GL_TEXTURE_2D, GL_REPEAT, GL_LINEAR, true, true);
+        texture->loadFromFile(texFileNames[i]);
         if (texture->isLoaded())
         {
             texture->bindToChannel(i);
             mTextures.push_back(texture);
-        }*/
+        }
     }
 }
 
@@ -67,13 +97,13 @@ void ShaderToy::addUserFragmentMainCode(const char *fragmentMain)
     auto size = mTextures.size();
     for (int i = 0; i < size; i++)
     {
-        sprintf(buffer, "uniform sampler2D iChannel%d\n", i);
+        sprintf(buffer, "uniform sampler2D iChannel%d;\n", i);
         fragment.append(buffer);
     }
 
     fragment.append(fragmentMain);
     fragment.append(fragmentShaderPassFooter);
-	
+
 #ifdef DEBUG
 	SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s\n", fragment.c_str());
 #endif
@@ -119,6 +149,16 @@ bool ShaderToy::screenshot()
 	delete[] pixels;
 	delete[] filename;
     return ret;
+}
+
+void ShaderToy::createIcon(const unsigned char *buffer, size_t size)
+{
+    stbi_set_flip_vertically_on_load(0);
+
+    int w, h, n;
+    stbi_uc *pixels = stbi_load_from_memory(icon, size, &w, &h, &n, STBI_rgb_alpha);
+    setWindowIcon(pixels, w, h, n);
+    stbi_image_free(pixels);
 }
 
 void ShaderToy::initilizeUniformValue()
@@ -221,25 +261,30 @@ void ShaderToy::resizeGL(int w, int h)
 
     mInput.iResolution.setX(w * 1.0f);
     mInput.iResolution.setY(h * 1.0f);
+    Window::resizeGL(w, h);
 }
 
 void ShaderToy::renderGL()
 {
-    time_t t = time(nullptr);
-    struct tm *date = localtime(&t);
+    float ms = mseconds();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    auto size = mTextures.size();
+    for (int i = 0; i < size; i++)
+        mTextures[i]->bindToChannel(i);
+
     mProgram->bind();
+
     mInput.iTime = mFPS.globalTime() / 1000.0f;
     mInput.iGlobalTime = mInput.iTime;
 
-    mInput.iDate.setX(date->tm_year + 1900.0f);
-    mInput.iDate.setY((float)date->tm_mon);
-    mInput.iDate.setZ((float)date->tm_mday);
-    mInput.iDate.setW(date->tm_hour * 60.0f * 60.0f +
-                      date->tm_min * 60.0f + (float)date->tm_sec);
+    mInput.iDate.setX(t->tm_year + 1900.0f);
+    mInput.iDate.setY((float)t->tm_mon);
+    mInput.iDate.setZ((float)t->tm_mday);
+    mInput.iDate.setW(t->tm_hour * 60.0f * 60.0f +
+                      t->tm_min * 60.0f + (float)t->tm_sec + 0.0f);
 
     mInput.iFrame += mFPS.frameCount();
     mInput.iTimeDelta =  mFPS.frameRateDelay() / 1000.0f;
@@ -267,26 +312,29 @@ void ShaderToy::keydownEvent(SDL_KeyboardEvent *event)
 	}
 }
 
-void ShaderToy::mouseButtonEvent(SDL_MouseButtonEvent *event)
+void ShaderToy::mouseButtonUpEvent(SDL_MouseButtonEvent *event)
 {
-	if (event->type == SDL_MOUSEBUTTONUP)
-	{
-		mInput.iMouse.setZ(-Math::abs(mInput.iMouse.z()));
-		mInput.iMouse.setW(-Math::abs(mInput.iMouse.w()));
-	}
-	else if (event->type == SDL_MOUSEBUTTONDOWN)
-	{
-		const Rectangle *rect = drawableRect();
-		mInput.iMouse.setZ(Math::floor(event->x - rect->left()) / rect->width() * width());
-		mInput.iMouse.setW(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
-		mInput.iMouse.setX(mInput.iMouse.z());
-		mInput.iMouse.setY(mInput.iMouse.w());
-	}
+    mInput.iMouse.setZ(-Math::abs(mInput.iMouse.z()));
+    mInput.iMouse.setW(-Math::abs(mInput.iMouse.w()));
+}
+
+void ShaderToy::mouseButtonDownEvent(SDL_MouseButtonEvent *event)
+{
+    const Rectangle *rect = drawableRect();
+    mInput.iMouse.setZ(Math::floor((event->x - rect->left()) / rect->width() * width()));
+    mInput.iMouse.setW(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
+    mInput.iMouse.setX(mInput.iMouse.z());
+    mInput.iMouse.setY(mInput.iMouse.w());
 }
 
 void ShaderToy::mouseMotionEvent(SDL_MouseMotionEvent *event)
 {
-	const Rectangle *rect = drawableRect();
-	mInput.iMouse.setX(Math::floor(event->x - rect->left()) / rect->width() * width());
-	mInput.iMouse.setY(Math::floor(height() - (event->y - rect->top()) / rect->height() * height()));
+    const Rectangle *winrect = rect();
+    const Rectangle *drawrect = drawableRect();
+
+    float widthRatio = drawrect->width() / winrect->width();
+    float heightRatio = drawrect->height() / winrect->height();
+
+    mInput.iMouse.setX(Math::floor(event->x - drawrect->left()) * widthRatio);
+    mInput.iMouse.setY(Math::floor(height() - (event->y - drawrect->top()) * heightRatio));
 }
