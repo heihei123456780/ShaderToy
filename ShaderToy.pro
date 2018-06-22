@@ -46,7 +46,9 @@ SOURCES += \
     src/vector3.cpp \
     src/vector4.cpp \
     src/vertexarrayobject.cpp \
-    src/window.cpp
+    src/window.cpp \
+    test/readfile.cpp \
+    src/resource.cpp
 
 HEADERS += \
     include/common.h \
@@ -91,7 +93,8 @@ HEADERS += \
     include/utils/framerate.h \
     include/common.h \
     include/stb_image.h \
-    include/stb_image_write.h
+    include/stb_image_write.h \
+    include/resource.h
 
 SUBDIRS += \
     ShaderToy.pro

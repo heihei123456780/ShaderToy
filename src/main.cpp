@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 
     if (hasShader == false)
     {
+        printUsage();
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "No specified fragment shader source file\n");
         return EXIT_FAILURE;
     }
