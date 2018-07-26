@@ -1,13 +1,4 @@
-#ifdef GL_ES
-precision mediump float;
-#endif
-
 #define ITERATIONS 9
-
-uniform sampler2D u_backbuffer;
-uniform vec2 u_resolution;
-uniform vec2 u_mouse;
-uniform float u_time;
 
 float diffU = 0.25;
 float diffV = 0.05;
@@ -22,9 +13,9 @@ float random (vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
 }
 
-void main(void){
-    vec2 st   = gl_FragCoord.st/u_resolution;
-    vec2 pixel = 1./u_resolution;
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+    vec2 st   = fragCoord.xy / iResolution.xy;
+    vec2 pixel = 1. / iResolution.xy;
 
     float kernel[9];
     kernel[0] = 0.707106781;
@@ -50,17 +41,17 @@ void main(void){
     offset[7] = pixel * vec2( 0.0,1.0);
     offset[8] = pixel * vec2( 1.0,1.0);
 
-    vec2 texColor = texture2D(u_backbuffer, st).rb;
+    vec2 texColor = texture2D(iChannel0, st).rb;
 
     vec2 uv = st;
-    uv -= u_mouse/u_resolution;
-    float pct = random(u_time);
+    uv -= iMouse.xy / iResolution.xy;
+    float pct = random(iGlobalTime);
     float srcTexColor = smoothstep(.999+pct*0.0001,1.,1.-dot(uv,uv))*random(st)*pct;
 
     vec2 lap = vec2(0.0);
 
     for (int i=0; i < ITERATIONS; i++){
-        vec2 tmp = texture2D(u_backbuffer, st + offset[i]).rb;
+        vec2 tmp = texture2D(iChannel0, st + offset[i]).rb;
         lap += tmp * kernel[i];
     }
 
@@ -78,5 +69,5 @@ void main(void){
     u += du * 0.6;
     v += dv * 0.6;
 
-    gl_FragColor = vec4(clamp( u, 0.0, 1.0 ), 1.0 - u/v ,clamp( v, 0.0, 1.0 ), 1.0);
+    fragColor = vec4(clamp( u, 0.0, 1.0 ), 1.0 - u/v ,clamp( v, 0.0, 1.0 ), 1.0);
  }

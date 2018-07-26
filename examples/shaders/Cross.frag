@@ -1,10 +1,3 @@
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-uniform vec2 u_resolution;
-uniform float u_time;
-
 float box(in vec2 _st, in vec2 _size){
     _size = vec2(0.5) - _size*0.5;
     vec2 uv = smoothstep(_size,
@@ -21,11 +14,11 @@ float cross(in vec2 _st, float _size){
             box(_st, vec2(_size/4.,_size));
 }
 
-void main(){
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+void mainImage(out vec4 fragColor, in vec2 fragCoord){
+    vec2 st = fragCoord.xy / iResolution.xy;
     vec3 color = vec3(0.0);
 
     color += vec3(cross(st,0.5));
 
-    gl_FragColor = vec4(color,1.0);
+    fragColor = vec4(color,1.0);
 }
